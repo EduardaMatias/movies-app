@@ -1,23 +1,18 @@
 import * as S from "./styles";
+import { APIKey } from "../../config/key";
+import { useState, useEffect } from "react";
 
 const Home = () => {
-  const movies = [
-    {
-      id: 1,
-      title: "Spider man",
-      image_url: "https://i.pinimg.com/736x/4b/35/84/4b3584e56a1fb8e48093e5ddb1caed8e.jpg",
-    },
-    {
-      id: 2,
-      title: "Batman",
-      image_url: "https://img.elo7.com.br/product/original/3FBBED5/big-poster-filme-batman-2022-90x60-cm-lo004-presente-geek.jpg",
-    },
-    {
-      id: 3,
-      title: "Avangers",
-      image_url: "https://img.elo7.com.br/product/zoom/1DC8235/big-poster-avengers-infinity-war-tamanho-90x-0-cm-lo001-avengers.jpg",
-    },
-  ];
+  const [movies, setMovies] = useState([]);
+
+  const image_path = "https://image.tmdb.org/t/p/w500/"
+
+  useEffect(() => {
+    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${APIKey}&language=en-US&page=1`)
+      .then((response) => response.json())
+      .then((data) => setMovies(data.results));
+  }, []);
+
   return (
     <S.Container>
       <h1> Movies </h1>
@@ -26,7 +21,7 @@ const Home = () => {
           return (
             <S.Movie key={movie.id}>
               <a href="https://google.com.br">
-                <img src={movie.image_url} alt={movie.title} />
+                <img src={`${image_path}${movie.poster_path}`} alt={movie.title} />
               </a>
               <span>{movie.title}</span>
             </S.Movie>
